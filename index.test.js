@@ -92,3 +92,11 @@ test('red on white has contrast ratio of about 4', () => {
   const el = testEl('#f00', '#fff', '#fff')
   expect(valid.contrastRatio(el)).toBeCloseTo(4, 0)
 })
+
+test('parses rgb color', () => {
+  expect(valid.parseRGBA('rgb(1, 2, 3)')).toEqual({ r: 1, g: 2, b: 3, a: 1 })
+})
+
+test('parses rgba color', () => {
+  expect(valid.parseRGBA('rgba(1, 2, 3, 0.5)')).toEqual({ r: 1, g: 2, b: 3, a: 0.5 })
+})

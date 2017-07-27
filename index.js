@@ -96,3 +96,4 @@ function elementIsValid (elem) {
 exports = module.exports = elementIsValid
 exports.isLargeText = isLargeText
 exports.contrastRatio = elementContrastRatio
+exports.parseRGBA = parseRGBA
