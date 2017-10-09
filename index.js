@@ -1,7 +1,7 @@
 var TRANSPARENT = { r: 0, g: 0, b: 0, a: 0 }
 var WHITE = { r: 255, g: 255, b: 255, a: 1 }
 
-function parseRGBA (str) {
+function parseRGBA(str) {
   var pattern = /rgba?\((\d+),\s(\d+),\s(\d+)(,\s([\d\.]+))?\)/
   var matches = pattern.exec(str)
   if (!matches) {
@@ -15,7 +15,7 @@ function parseRGBA (str) {
   }
 }
 
-function blendRGBA (dst, src) {
+function blendRGBA(dst, src) {
   var a = src.a + dst.a * (1 - src.a)
   if (a === 0) {
     return TRANSPARENT
@@ -28,7 +28,7 @@ function blendRGBA (dst, src) {
   }
 }
 
-function relativeLuminance (rgba) {
+function relativeLuminance(rgba) {
   if (rgba.a < 1) {
     rgba = blendRGBA(WHITE, rgba)
   }
@@ -38,7 +38,7 @@ function relativeLuminance (rgba) {
   return r * 0.2126 + g * 0.7152 + b * 0.0722
 }
 
-function luminanceColor (val) {
+function luminanceColor(val) {
   var s = val / 255
   if (s <= 0.03928) {
     return s / 12.92
@@ -46,13 +46,15 @@ function luminanceColor (val) {
   return Math.pow((s + 0.055) / 1.055, 2.4)
 }
 
-function contrastRatio (rgba1, rgba2) {
+function contrastRatio(rgba1, rgba2) {
   var lums = [relativeLuminance(rgba1), relativeLuminance(rgba2)]
-  lums.sort(function (a, b) { return b - a })
+  lums.sort(function(a, b) {
+    return b - a
+  })
   return (lums[0] + 0.05) / (lums[1] + 0.05)
 }
 
-function backgroundColor (elem) {
+function backgroundColor(elem) {
   var stack = []
   var cur = elem
   while (cur != null) {
@@ -68,27 +70,27 @@ function backgroundColor (elem) {
   return stack.reduceRight(blendRGBA, WHITE)
 }
 
-function elementColors (elem) {
+function elementColors(elem) {
   var rgba = parseRGBA(window.getComputedStyle(elem).color)
   var bg = backgroundColor(elem)
   var fg = blendRGBA(bg, rgba)
   return [fg, bg]
 }
 
-function elementContrastRatio (elem) {
+function elementContrastRatio(elem) {
   var colors = elementColors(elem)
   return contrastRatio(colors[0], colors[1])
 }
 
-function isLargeText (elem) {
+function isLargeText(elem) {
   var styles = window.getComputedStyle(elem)
   var size = parseFloat(styles.fontSize) / 1.333
   var weight = styles.fontWeight
-  var isBold = weight === 'bold' || parseInt(weight, 10) >= 600
+  var isBold = weight === "bold" || parseInt(weight, 10) >= 600
   return isBold ? size >= 14 : size >= 18
 }
 
-function elementIsValid (elem) {
+function elementIsValid(elem) {
   var contrast = elementContrastRatio(elem)
   return isLargeText(elem) ? contrast >= 3 : contrast >= 4.5
 }
