@@ -24,7 +24,7 @@ function blendRGBA(dst, src) {
     r: (src.r * src.a + dst.r * dst.a * (1 - src.a)) / a,
     g: (src.g * src.a + dst.g * dst.a * (1 - src.a)) / a,
     b: (src.b * src.a + dst.b * dst.a * (1 - src.a)) / a,
-    a
+    a: a
   }
 }
 
